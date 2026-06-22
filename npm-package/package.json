@@ -1,5 +1,5 @@
 {
-  "name": "@subhrajyoti/portfolio",
+  "name": "@subhrajyoti5/portfolio",
   "version": "1.0.0",
   "description": "Subhrajyoti's TUI Portfolio",
   "main": "index.js",
@@ -10,5 +10,5 @@
     "bin",
     "index.js"
   ],
-  "license": "MIT"
+  "license": "Personal"
 }
