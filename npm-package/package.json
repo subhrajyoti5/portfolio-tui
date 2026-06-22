@@ -1,6 +1,6 @@
 {
   "name": "@subhrajyoti5/portfolio",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Subhrajyoti's TUI Portfolio",
   "main": "index.js",
   "bin": {
