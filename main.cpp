@@ -33,6 +33,15 @@ int main() {
   auto menu = Menu(&entries, &selected);
   auto container = Container::Vertical({menu});
 
+  auto ascii_art = vbox({
+    text(R"(███████╗██╗   ██╗██████╗ ██╗  ██╗██████╗  █████╗ )") | color(Color::Magenta1),
+    text(R"(██╔════╝██║   ██║██╔══██╗██║  ██║██╔══██╗██╔══██╗)") | color(Color::Magenta1),
+    text(R"(███████╗██║   ██║██████╔╝███████║██████╔╝███████║)") | color(Color::Magenta1),
+    text(R"(╚════██║██║   ██║██╔══██╗██╔══██║██╔══██╗██╔══██║)") | color(Color::Magenta1),
+    text(R"(███████║╚██████╔╝██████╔╝██║  ██║██║  ██║██║  ██║)") | color(Color::Magenta1),
+    text(R"(╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝)") | color(Color::Magenta1),
+  });
+
   auto renderer = Renderer(container, [&] {
     Element content;
     switch (selected) {
@@ -105,15 +114,13 @@ int main() {
 
     return vbox({
       // Header
-      text(" SUBHRA ") | bold | color(Color::Magenta1),
-      text(" Backend Engineer ") | color(Color::Magenta1),
+      ascii_art | center,
+      text(" Backend Engineer ") | color(Color::Magenta1) | center,
       separator(),
       // Main
       hbox({
         // Sidebar
         vbox({
-          text(" SUBHRA ") | bold | center,
-          separator(),
           menu->Render(),
         }) | border | size(WIDTH, EQUAL, 30),
         // Content
@@ -143,11 +150,11 @@ int main() {
       return true;
     }
     if (event == Event::Character('l')) {
-      openBrowser("https://linkedin.com");
+      openBrowser("https://www.linkedin.com/in/subhrajyoti-sahoo-b047a227a/");
       return true;
     }
     if (event == Event::Character('r')) {
-      openBrowser("https://resume.url");
+      openBrowser("https://drive.google.com/file/d/1kJIWjLmJLDbWObUIbBL7U87Ote34z1y0/view");
       return true;
     }
     return false;
