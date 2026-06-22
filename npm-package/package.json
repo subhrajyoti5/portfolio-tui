@@ -1,0 +1,14 @@
+{
+  "name": "@subhrajyoti/portfolio",
+  "version": "1.0.0",
+  "description": "Subhrajyoti's TUI Portfolio",
+  "main": "index.js",
+  "bin": {
+    "subhra": "./index.js"
+  },
+  "files": [
+    "bin",
+    "index.js"
+  ],
+  "license": "MIT"
+}
