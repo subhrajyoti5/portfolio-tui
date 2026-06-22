@@ -7,3 +7,5 @@ build/
 *.ilk
 *.user
 *.suo   
+.commandcode/plans/portfolio-tui-v2.md
+.commandcode/taste/taste.md

@@ -1,7 +1,7 @@
 {
   "name": "@subhrajyoti5/portfolio",
-  "version": "1.0.4",
-  "description": "Subhrajyoti's TUI Portfolio",
+  "version": "1.0.6",
+  "description": "Subhrajyoti's TUI Portfolio — Full-screen terminal app",
   "main": "index.js",
   "bin": {
     "subhra": "./index.js"
