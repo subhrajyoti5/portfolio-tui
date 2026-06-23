@@ -491,7 +491,7 @@ int main() {
           }),
           hbox({
             text("  ◆  ") | color(COLOR_PRIMARY),
-            text("500+ Active Users") | bold,
+            text("30+ Active Users") | bold,
           }),
           hbox({
             text("  ◆  ") | color(COLOR_PRIMARY),
