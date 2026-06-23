@@ -17,128 +17,251 @@ void openBrowser(const std::string& url) {
 #endif
 }
 
+// ── helpers ────────────────────────────────────────────────────────────────
+
+Element sectionHeader(const std::string& label) {
+  return hbox({
+    text("── ") | color(Color::GrayDark),
+    text(label) | color(Color::Cyan1) | bold,
+    text(" ") | color(Color::GrayDark),
+    separator() | color(Color::GrayDark),
+  });
+}
+
+Element labeledRow(const std::string& label, const std::string& value) {
+  return hbox({
+    text("  ") | color(Color::GrayDark),
+    text(label + "  ") | color(Color::GrayLight),
+    text(value) | color(Color::Default),
+  });
+}
+
+// ── main ───────────────────────────────────────────────────────────────────
+
 int main() {
   auto screen = ScreenInteractive::Fullscreen();
 
   int selected = 0;
   std::vector<std::string> entries = {
-    " About",
-    " Projects",
-    " Skills",
-    " Experience",
-    " Contact",
-    " Resume"
+    "  About",
+    "  Projects",
+    "  Skills",
+    "  Experience",
+    "  Contact",
+    "  Resume",
   };
 
-  auto menu = Menu(&entries, &selected);
+  MenuOption menuOption;
+  menuOption.entries_option.transform = [](const EntryState& state) {
+    auto label = text(state.label);
+    if (state.active) {
+      return hbox({
+        text("  ▸") | color(Color::Cyan1),
+        label | color(Color::Cyan1) | bold,
+      });
+    }
+    return label | color(Color::GrayDark) | dim;
+  };
+
+  auto menu = Menu(&entries, &selected, menuOption);
   auto container = Container::Vertical({menu});
 
+  // ── ASCII logo (preserved, now cyan) ─────────────────────────────────────
+
   auto ascii_art = vbox({
-    text(R"(███████╗██╗   ██╗██████╗ ██╗  ██╗██████╗  █████╗ )") | color(Color::Magenta1),
-    text(R"(██╔════╝██║   ██║██╔══██╗██║  ██║██╔══██╗██╔══██╗)") | color(Color::Magenta1),
-    text(R"(███████╗██║   ██║██████╔╝███████║██████╔╝███████║)") | color(Color::Magenta1),
-    text(R"(╚════██║██║   ██║██╔══██╗██╔══██║██╔══██╗██╔══██║)") | color(Color::Magenta1),
-    text(R"(███████║╚██████╔╝██████╔╝██║  ██║██║  ██║██║  ██║)") | color(Color::Magenta1),
-    text(R"(╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝)") | color(Color::Magenta1),
+    text(R"(███████╗██╗   ██╗██████╗ ██╗  ██╗██████╗  █████╗ )") | color(Color::Cyan1),
+    text(R"(██╔════╝██║   ██║██╔══██╗██║  ██║██╔══██╗██╔══██╗)") | color(Color::Cyan1),
+    text(R"(███████╗██║   ██║██████╔╝███████║██████╔╝███████║)") | color(Color::Cyan1),
+    text(R"(╚════██║██║   ██║██╔══██╗██╔══██║██╔══██╗██╔══██║)") | color(Color::Cyan1),
+    text(R"(███████║╚██████╔╝██████╔╝██║  ██║██║  ██║██║  ██║)") | color(Color::Cyan1),
+    text(R"(╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝)") | color(Color::Cyan1),
   });
+
+  // ── compact status panel data ────────────────────────────────────────────
+
+  auto statusPanel = hbox({
+    text(" Projects: 3 ") | color(Color::GrayLight),
+    text("│") | color(Color::GrayDark),
+    text(" Users: 500+ ") | color(Color::GrayLight),
+    text("│") | color(Color::GrayDark),
+    text(" Institutes: 5 ") | color(Color::GrayLight),
+    text("│") | color(Color::GrayDark),
+    text(" Revenue: Active ") | color(Color::Green1),
+    text("   ") | color(Color::GrayDark),
+    text("●") | color(Color::Green1),
+    text(" LIVE  ") | color(Color::GrayLight),
+    text("●") | color(Color::Cyan1),
+    text(" PRODUCTION") | color(Color::GrayLight),
+  });
+
+  // ── renderer ─────────────────────────────────────────────────────────────
 
   auto renderer = Renderer(container, [&] {
     Element content;
+
     switch (selected) {
-      case 0:
+      case 0: { // About
         content = vbox({
-          text("Name: Subhrajyoti Sahoo"),
-          text("Role: Backend Engineer"),
-          text("University: KIIT University"),
-          text("Focus: Backend Systems, Distributed Systems, Cloud Infrastructure"),
+          text("Subhrajyoti Sahoo") | color(Color::Cyan1) | bold,
+          text("B.Tech CSE (Data Science) — KIIT University (2024–2028)") | color(Color::GrayLight),
           separator(),
-          text("Current Projects:"),
-          text("  Shixa"),
-          text("  Optima"),
-          text("  BugRank"),
+          text("Backend-focused engineer building products with real users,"),
+          text("real infrastructure, and real business models."),
+          separator(),
+          sectionHeader("Current Focus"),
+          text(""),
+          hbox({text("  "), text("▸") | color(Color::Cyan1), text("  Shixa") | bold, text("          Production SaaS Platform") | color(Color::GrayLight)}),
+          hbox({text("  "), text("▸") | color(Color::Cyan1), text("  Optima") | bold, text("         Developer Tools & Infrastructure") | color(Color::GrayLight)}),
+          hbox({text("  "), text("▸") | color(Color::Cyan1), text("  BugRank") | bold, text("        Secure Code Evaluation") | color(Color::GrayLight)}),
+          hbox({text("  "), text("▸") | color(Color::Cyan1), text("  Backend Systems") | bold, text("   Cloud Infrastructure") | color(Color::GrayLight)}),
+          text(""),
+          text("  Building with: Node.js, Docker, AWS, PostgreSQL, React") | color(Color::GrayDark),
         });
         break;
-      case 1:
+      }
+      case 1: { // Projects
         content = vbox({
-          text("Shixa") | color(Color::Green1) | bold,
-          text("  Coaching SaaS Platform"),
-          text("  Features: Student Management, Fee Tracking, Attendance, Tests"),
-          text("  Stack: React, PostgreSQL, AWS, Node.js"),
+          // SHIXA
+          hbox({
+            text("  SHIXA") | color(Color::Cyan1) | bold,
+            filler(),
+            text("shixa.subhr.in") | color(Color::BlueLight),
+            text("  "),
+            text("● LIVE") | color(Color::Green1),
+          }),
+          text("  20+ Users  ·  2 Institutes  ·  Revenue Generating(loss)") | color(Color::GrayLight),
+          text("  AWS Hosted") | color(Color::GrayDark),
           separator(),
-          text("Optima") | color(Color::Green1) | bold,
-          text("  Productivity Operating System"),
-          text("  Features: Tasks, Habits, Focus Sessions, Analytics"),
-          text("  Stack: Flutter, Spring Boot, PostgreSQL"),
+          // BUGRANK
+          hbox({
+            text("  BUGRANK") | color(Color::Cyan1) | bold,
+            filler(),
+            text("bugrank.in") | color(Color::BlueLight),
+            text("  "),
+            text("● LIVE") | color(Color::Green1),
+          }),
+          text("  19+ Challenges  ·  Docker Sandbox  ·  Sub-3s Evaluation") | color(Color::GrayLight),
+          text("  Secure Code Execution Platform") | color(Color::GrayDark),
           separator(),
-          text("BugRank") | color(Color::Green1) | bold,
-          text("  Debugging Platform"),
-          text("  Features: Coding Challenges, Containerized Execution, Leaderboards"),
-          text("  Stack: Docker, Linux, PostgreSQL"),
+          // OPTIMA
+          hbox({
+            text("  OPTIMA") | color(Color::Cyan1) | bold,
+            filler(),
+            text("● BUILDING") | color(Color::Yellow1),
+          }),
+          text("  Productivity OS ") | color(Color::GrayLight),
+          text("  Cross-platform Developer Tool") | color(Color::GrayDark),
         });
         break;
-      case 2:
+      }
+      case 2: { // Skills
         content = vbox({
-          text("Backend"),
-          text("  Node.js, Java, Spring Boot"),
+          sectionHeader("Languages"),
+          text("  JavaScript  Java  C++  Dart  SQL") | color(Color::GrayLight),
+          text(""),
+          sectionHeader("Backend"),
+          text("  Node.js  ·  REST APIs  ·  JWT Authentication") | color(Color::GrayLight),
+          text("  Spring Boot  ·  Prisma") | color(Color::GrayDark),
+          text(""),
+          sectionHeader("Databases"),
+          text("  PostgreSQL  ·  Firestore  ·  Hive") | color(Color::GrayLight),
+          text(""),
+          sectionHeader("Infrastructure"),
+          text("  Docker  ·  AWS EC2  ·  Linux  ·  Nginx  ·  Cloudflare R2") | color(Color::GrayLight),
+          text(""),
+          sectionHeader("Frontend"),
+          text("  React 19  ·  Flutter  ·  Tailwind CSS") | color(Color::GrayLight),
+        });
+        break;
+      }
+      case 3: { // Experience
+        content = vbox({
+          sectionHeader("Production Experience"),
+          text(""),
+          text("  Shixa") | bold | color(Color::Cyan1),
+          hbox({text("    ▸"), text("  Live SaaS Infrastructure") | color(Color::GrayLight)}),
+          hbox({text("    ▸"), text("  2 Paying Customers") | color(Color::GrayLight)}),
+          hbox({text("    ▸"), text("  Production Deployments in AWS") | color(Color::GrayLight)}),
           separator(),
-          text("Database"),
-          text("  PostgreSQL, Prisma"),
+          text("  BugRank") | bold | color(Color::Cyan1),
+          hbox({text("    ▸"), text("  Docker Sandboxed Execution") | color(Color::GrayLight)}),
+          hbox({text("    ▸"), text("  Secure Code Evaluation") | color(Color::GrayLight)}),
+          hbox({text("    ▸"), text("  Sub-3s Evaluation Time") | color(Color::GrayLight)}),
+          hbox({text("    ▸"), text("  Build vps") | color(Color::GrayLight)}),
           separator(),
-          text("Cloud"),
-          text("  AWS, Docker, Linux"),
+          text("  Optima") | bold | color(Color::Cyan1),
+          hbox({text("    ▸"), text("  Android Development") | color(Color::GrayLight)}),
+          hbox({text("    ▸"), text("  Offline-first Design") | color(Color::GrayLight)}),
+          hbox({text("    ▸"), text("  Real-time Sync Architecture") | color(Color::GrayLight)}),
+        });
+        break;
+      }
+      case 4: { // Contact
+        content = vbox({
+          labeledRow("Email   ", "subhrajyotisahoo08@gmail.com"),
+          text(""),
+          labeledRow("GitHub  ", "github.com/subhrajyoti5"),
+          text(""),
+          labeledRow("LinkedIn", "linkedin.com/in/subhrajyoti-sahoo-b047a227a"),
+          text(""),
           separator(),
-          text("Frontend"),
-          text("  Flutter, React"),
+          text("  Press [g] for GitHub · [l] for LinkedIn") | color(Color::GrayDark),
         });
         break;
-      case 3:
+      }
+      case 5: { // Resume
         content = vbox({
-          text("No professional experience listed yet."),
-          text("Currently building Shixa, Optima, BugRank."),
+          text("Resume") | color(Color::Cyan1) | bold,
+          separator(),
+          text("Available online.") | color(Color::GrayLight),
+          text(""),
+          hbox({text("  "), text("▸") | color(Color::Cyan1), text("  Press [r] to open in browser") | color(Color::GrayLight)}),
         });
         break;
-      case 4:
-        content = vbox({
-          text("GitHub: github.com/subhrajyoti5") | color(Color::Yellow1),
-          text("LinkedIn: linkedin.com") | color(Color::Yellow1),
-          text("Email: subhrajyotisahoo08@gmail.com") | color(Color::Yellow1),
-        });
-        break;
-      case 5:
-        content = vbox({
-          text("Resume available online."),
-          text("Press [r] to open."),
-        });
-        break;
+      }
     }
 
+    // ── root layout ──────────────────────────────────────────────────────
     return vbox({
       // Header
       ascii_art | center,
-      text(" Backend Engineer ") | color(Color::Magenta1) | center,
+      text("Subhrajyoti Sahoo") | bold | center,
+      text("Backend Engineer  •  SaaS Builder  •  KIIT CSE DS") | color(Color::GrayLight) | center,
+      hbox({
+        filler(),
+        text(" ● ONLINE") | color(Color::Green1),
+        text("  •  Building Shixa, Optima & Developer Tools") | color(Color::GrayLight),
+        filler(),
+      }),
       separator(),
-      // Main
+      // Main content area
       hbox({
         // Sidebar
         vbox({
+          text("") | size(HEIGHT, EQUAL, 1),
           menu->Render(),
-        }) | border | size(WIDTH, EQUAL, 30),
+          text("") | size(HEIGHT, EQUAL, 1),
+        }) | border | size(WIDTH, EQUAL, 28),
         // Content
         vbox({
-          text("PORTFOLIO") | bold | center,
-          separator(),
-          content,
+          text("") | size(HEIGHT, EQUAL, 1),
+          content | vscroll_indicator | frame | flex,
+          text("") | size(HEIGHT, EQUAL, 1),
         }) | flex | border,
-      }),
-      // Footer
+      }) | flex,
+      // Bottom bar
+      separator(),
       hbox({
-        text(" [g] GitHub ") | color(Color::GrayDark),
-        text(" [l] LinkedIn ") | color(Color::GrayDark),
-        text(" [r] Resume ") | color(Color::GrayDark),
-        text(" [q] Quit ") | color(Color::GrayDark),
+        statusPanel | flex,
+        text("  [g] GitHub ") | color(Color::GrayLight),
+        text("[l] LinkedIn ") | color(Color::GrayLight),
+        text("[r] Resume ") | color(Color::GrayLight),
+        text("[q] Quit ") | color(Color::GrayLight),
       }),
     });
   });
+
+  // ── event handling (preserved) ───────────────────────────────────────────
 
   auto app = CatchEvent(renderer, [&](Event event) {
     if (event == Event::Character('q')) {
