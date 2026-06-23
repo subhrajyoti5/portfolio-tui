@@ -245,7 +245,7 @@
 //         // Content
 //         vbox({
 //           text("") | size(HEIGHT, EQUAL, 1),
-//           content | vscroll_indicator | frame | flex,
+//           scrollable_content->Render() | flex,
 //           text("") | size(HEIGHT, EQUAL, 1),
 //         }) | flex | border,
 //       }) | flex,
@@ -404,7 +404,35 @@ int main() {
   };
 
   auto menu = Menu(&entries, &selected, menuOption);
-  auto container = Container::Vertical({menu});
+
+  // ── Scrollable content panel ──────────────────────────────────────────
+  Element content_element;
+  float scroll_pos = 0.0f;
+  int prev_selected = selected;
+
+  auto content_renderer = Renderer([&] {
+    if (selected != prev_selected) {
+      scroll_pos = 0.0f;
+      prev_selected = selected;
+    }
+    return content_element
+         | focusPositionRelative(0.0f, scroll_pos)
+         | vscroll_indicator | yframe;
+  });
+
+  auto scrollable_content = CatchEvent(content_renderer, [&](Event event) {
+    if (event == Event::ArrowUp) {
+      scroll_pos = std::max(0.0f, scroll_pos - 0.1f);
+      return true;
+    }
+    if (event == Event::ArrowDown) {
+      scroll_pos = std::min(1.0f, scroll_pos + 0.1f);
+      return true;
+    }
+    return false;
+  });
+
+  auto container = Container::Vertical({menu, scrollable_content});
 
   // ── Premium ASCII Art Header ─────────────────────────────────────────
    auto ascii_art = vbox({
@@ -865,6 +893,8 @@ int main() {
         break;
       }
     }
+
+    content_element = content;
 
     // ═══════════════════════════════════════════════════════════════════
     // ═ FINAL LAYOUT ═══════════════════════════════════════════════════
